@@ -1,6 +1,7 @@
 import kivy
 
 from kivy.app import App
+from kivy.uix.videoplayer import VideoPlayer
 
 class videoApp(App):
     pass
