@@ -1,5 +1,6 @@
 import random
 import sys
+
 if len(sys.argv) != 3 or sys.argv[1] != "-n":
     print("Uso: python simulación_moneda_v0.06.py -n <num_valores>")
     sys.exit(1)

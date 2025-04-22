@@ -5,7 +5,7 @@ x1 = list(range(1000))
 y1 = [random.random() for _ in x1]
 x2 = list(range(1000))
 y2 = [random.random() for _ in x2]
-y_avg = [(y1[i] + y2[i]/2) for i in range(1000)]
+y_avg = [((y1[i] + y2[i])/2) for i in range(1000)]
 fig, axs = plt.subplots(1, 3, figsize=(18, 6))
 
 axs[0].plot(x1, y1, color='blue')
