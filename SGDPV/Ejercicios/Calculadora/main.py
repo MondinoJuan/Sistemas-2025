@@ -1,10 +1,14 @@
 import kivy
 
 from kivy.app import App
+from kivy.lang import Builder
 
 class calculadoraApp(App):
+    def build(self):
+        return Builder.load_file("calculadora.kv")
+
     def seven(self):
-        self.root.ids.Screen.text += "7"
+        self.root.ids.screen.text += "7"
 
     def eight(self):
         self.root.ids.Screen.text += "8"

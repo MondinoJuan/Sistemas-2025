@@ -1,2 +1,7 @@
 #Ignoro repo de Soporte
 frro-python-2025-08/
+
+#Ignoro buildozer
+.buildozer
+bin
+venv
