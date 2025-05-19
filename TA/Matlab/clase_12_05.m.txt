@@ -1,0 +1,23 @@
+% Descargar el paquete "RTB.mltbx" desde la sección de
+% Robótica del Classroom para poder ejecutarlo
+clear;clc;close all;
+Pose0=SO3; % Matriz identidad
+Pose1=SO3.Ry(90, "deg");
+Pose2=Pose1*SO3.Rx(90, "deg");
+Pose3=Pose2*SO3.Rz(90, "deg");
+ejes=[-1.1 1.1 -1.1 1.1 -1.1 1.1] % Para que los tres ejes vayan de -1 a 1
+f = figure(1);
+% f.position(1:2:3:4) = [900 50 1000 950];
+trplot(Pose0, 'rgb', 'axis', ejes);
+pause;
+tranimate(Pose0, Pose1, 'rgb', 'axis', ejes);
+pause;
+tranimate(Pose1, Pose2, 'rgb', 'axis', ejes);
+pause;
+tranimate(Pose2, Pose3, 'rgb', 'axis', ejes);
+pause;
+hold off;
+trplot(Pose0, 'rgb', 'axis', ejes);
+pause;
+tranimate(Pose0, Pose3, 'rgb', 'axis', ejes);
+% Apretar la tecla "x" para que haga las animaciones
