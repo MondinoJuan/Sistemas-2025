@@ -79,6 +79,7 @@ while True:
             yLeftBottom = int(heightFactor * yLeftBottom)
             xRightTop   = int(widthFactor * xRightTop)
             yRightTop   = int(heightFactor * yRightTop)
+
             # Draw location of object  
             cv2.rectangle(frame, (xLeftBottom, yLeftBottom), (xRightTop, yRightTop), (0, 255, 0))
             posicion_media = (int((xLeftBottom + xRightTop) / 2), int((yLeftBottom + yRightTop) / 2))

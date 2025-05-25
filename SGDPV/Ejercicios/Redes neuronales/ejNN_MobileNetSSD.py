@@ -35,7 +35,7 @@ while True:
     cols = frame_resized.shape[1] 
     rows = frame_resized.shape[0]
 
-    #For get the class and location of object detected, 
+    # For get the class and location of object detected, 
     # There is a fix index for class, location and confidence
     # value in @detections array .
     for i in range(detections.shape[2]):
