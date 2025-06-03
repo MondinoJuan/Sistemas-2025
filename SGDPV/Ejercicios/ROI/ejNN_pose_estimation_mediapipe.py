@@ -7,7 +7,8 @@ mpPose = mediapipe.solutions.pose
 pose = mpPose.Pose()
 mpDraw = mediapipe.solutions.drawing_utils
 
-cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 pTime = 0
 
 # Coordenadas del ROI de foto
@@ -19,6 +20,11 @@ x3, y3 = 300, 80
 x4, y4 = 480, 250
 
 photo_taken = False  # Para evitar tomar muchas fotos seguidas
+mano_dentro_roi_photo = False
+
+mano_dentro_roi_video = False
+grabando = False
+salida = None
 
 while True:
 	success, img = cap.read()
@@ -31,7 +37,8 @@ while True:
 			lm = results.pose_landmarks.landmark[wrist_id]
 			cx, cy = int(lm.x * w), int(lm.y * h)
 			cv2.circle(img, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
-			if x1 < cx < x2 and y1 < cy < y2:
+			if x1 < cx < x2 and y1 < cy < y2 and mano_dentro_roi_photo == False:
+				mano_dentro_roi_photo = True
 				if not photo_taken:
 					filename = f"foto_{int(time.time())}.png"
 					cv2.imwrite(filename, img)
@@ -39,27 +46,43 @@ while True:
 					photo_taken = True
 				break
 			else:
+				mano_dentro_roi_photo = False
 				photo_taken = False
 
 			# Variable para controlar el estado de grabación
+			'''
 			if 'grabando' not in locals():
 				grabando = False
 				salida = None
+			'''
 
+
+			# Verificamos si la muñeca está dentro del ROI de video
 			if x3 < cx < x4 and y3 < cy < y4:
-				if not grabando:
-					salida = cv2.VideoWriter("video.avi", cv2.VideoWriter_fourcc(*"XVID"), 20.0, (img.shape[1], img.shape[0]))
-					grabando = True
-					print("Grabación iniciada")
-				else:
-					grabando = False
-					if salida is not None:
-						salida.release()
-						salida = None
-					print("Grabación finalizada")
-			elif grabando and salida is not None:
-				salida.write(img)
+				if not mano_dentro_roi_video:
+					# La mano acaba de entrar al ROI
+					mano_dentro_roi_video = True
 
+					if not grabando:
+						salida = cv2.VideoWriter("video.avi", cv2.VideoWriter_fourcc(*"XVID"), 20.0, (img.shape[1], img.shape[0]))
+						grabando = True
+						print("Grabación iniciada")
+					else:
+						grabando = False
+						if salida is not None:
+							salida.release()
+							salida = None
+						print("Grabación finalizada")
+			else:
+				# La mano ya salió del ROI, así que permitimos que vuelva a activarse
+				mano_dentro_roi_video = False
+
+			if grabando:
+				cv2.putText(img, "Grabando...", (x3, y3 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+				if salida is not None:
+					salida.write(img)
+			else:
+				cv2.putText(img, "No grabando", (x3, y3 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
 
 
