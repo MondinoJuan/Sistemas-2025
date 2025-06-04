@@ -1,14 +1,13 @@
 import cv2
 import mediapipe
 import time
-import os
 
 mpPose = mediapipe.solutions.pose
 pose = mpPose.Pose()
 mpDraw = mediapipe.solutions.drawing_utils
 
-#cap = cv2.VideoCapture(0)
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture(2)
 pTime = 0
 
 # Coordenadas del ROI de foto
