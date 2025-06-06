@@ -8,7 +8,7 @@ from datetime import datetime
 plt.style.use("seaborn-v0_8")
 
 # Constantes
-CAPITAL_INICIAL = 100000
+CAPITAL_INICIAL = 100
 APUESTA_BASE = 1
 
 
