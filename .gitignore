@@ -7,3 +7,7 @@ bin
 venv
 uso_flask
 Algortimos_Geneticos
+
+#Ignoro PDFs
+TA/Libros Teoria/Internet de Las Cosas.pdf
+TA/Libros Teoria/Sistemas de Control para Ingenieria.pdf
