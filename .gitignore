@@ -5,6 +5,7 @@ frro-python-2025-08/
 .buildozer
 bin
 venv
+venv310
 uso_flask
 Algortimos_Geneticos
 
