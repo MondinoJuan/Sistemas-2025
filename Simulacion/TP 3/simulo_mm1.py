@@ -2,20 +2,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque, defaultdict
 import sys
+import random
+import math
 
 
 def generar_interarribo(lambd):
-    return np.random.exponential(1 / lambd)
+    u = random.random()
+    return -1.0 / lambd * np.log(1 - u)
 
 def generar_servicio(mu):
-    return np.random.exponential(1 / mu)
+    u = random.random()
+    return -1.0 / mu * np.log(1 - u)
 
-def simular_mm1(lambd, mu, tiempo_simulacion):
+def simular_mm1(lambd, mu, tiempo_simulacion, tamaño_cola):
     eventos = []
     tiempo_actual = 0
     servidor_ocupado = False
     cola = deque()
     id_cliente = 1
+    clientes_rechazados = 0
 
     # Estadísticas
     tiempo_eventos = []
@@ -63,7 +68,10 @@ def simular_mm1(lambd, mu, tiempo_simulacion):
                 tiempos_sistema.append(tiempo_servicio)
                 clientes_atendidos += 1
             else:
-                cola.append((id_evento, tiempo_actual))
+                if len(cola) < tamaño_cola:
+                    cola.append((id_evento, tiempo_actual))
+                else:
+                    clientes_rechazados += 1
 
             id_cliente += 1
             proxima_llegada = tiempo_actual + generar_interarribo(lambd)
@@ -95,15 +103,20 @@ def simular_mm1(lambd, mu, tiempo_simulacion):
     utilizacion = tiempo_ocupado_servidor / tiempo_simulacion
     probabilidades = {n: c / sum(distribucion_cola.values()) for n, c in distribucion_cola.items()}
 
-    return L, Lq, W, Wq, utilizacion, probabilidades, tiempo_eventos, largo_cola, largo_sistema, tiempos_cola, tiempos_sistema
+    return L, Lq, W, Wq, utilizacion, probabilidades, tiempo_eventos, largo_cola, largo_sistema, tiempos_cola, tiempos_sistema, clientes_atendidos, clientes_rechazados
 
-def imprimir_resultados(promedios, teoricos):
+def imprimir_resultados(promedios, teoricos, probabilidades, prob_denegacion):
     print("\n--- Resultados Promedio Simulación M/M/1 ---")
     print(f"Promedio de clientes en sistema (L): {promedios['L']:.4f} | Teórico: {teoricos['L']:.4f}")
     print(f"Promedio de clientes en cola (Lq): {promedios['Lq']:.4f} | Teórico: {teoricos['Lq']:.4f}")
     print(f"Tiempo promedio en sistema (W): {promedios['W']:.4f} | Teórico: {teoricos['W']:.4f}")
     print(f"Tiempo promedio en cola (Wq): {promedios['Wq']:.4f} | Teórico: {teoricos['Wq']:.4f}")
     print(f"Utilización del servidor: {promedios['rho']:.4f}")
+    print("\n--- Probabilidad de encontrar n clientes en cola ---")
+    for n in sorted(probabilidades.keys()):
+        print(f"P(n={n} en cola) ≈ {probabilidades[n]:.4f}")
+    print(f"\n--- Probabilidad de denegación de servicio (cola finita tamaño {max_tamaño_cola}) ---")
+    print(f"P(rechazo) ≈ {p_denegacion:.4f}")
 
 def graficar_resultados(colas_raw, sistemas_raw, tiempos_cola_raw, tiempos_sistema_raw):
     plt.figure(figsize=(14, 12))
@@ -166,18 +179,20 @@ def graficar_resultados(colas_raw, sistemas_raw, tiempos_cola_raw, tiempos_siste
     plt.show()
 
 if __name__ == "__main__":
-    if len(sys.argv) != 7 or sys.argv[1] != '-m' or sys.argv[3] != '-p' or sys.argv[5] != '-c':
-        print("Uso: python mm1_simulator.py -m <mu> -p <proporcion entre llegadas y salidas> -c <ciclos>")
+    if len(sys.argv) != 9 or sys.argv[1] != '-m' or sys.argv[3] != '-p' or sys.argv[5] != '-c' or sys.argv[7] != '-n':
+        print("Uso: python simulo_mm1.py -m <mu> -p <proporcion entre llegadas y salidas> -c <ciclos> -n <tamaño máximo de cola>")
         sys.exit(1)
 
     proporcion = float(sys.argv[4])
     mu = float(sys.argv[2])
     ciclos = int(sys.argv[6])
+    max_tamaño_cola = int(sys.argv[8])
 
-    tiempo = 1 / mu
+    tiempo_servicio = -1 / mu * np.log(1 - random.random())
     lambd = proporcion * mu
 
-
+    rechazos_totales = 0
+    llegadas_totales = 0
     resultados = []
     colas_raw = []
     sistemas_raw = []
@@ -185,12 +200,16 @@ if __name__ == "__main__":
     tiempos_sistema_raw = []
 
     for _ in range(ciclos):
-        L, Lq, W, Wq, utilizacion, probs, tiempos, colas, sistemas, t_cola, t_sistema = simular_mm1(lambd, mu, tiempo)
+        L, Lq, W, Wq, utilizacion, probs, tiempos, colas, sistemas, t_cola, t_sistema, clientes_atendidos, clientes_rechazados = simular_mm1(lambd, mu, tiempo_servicio, max_tamaño_cola)
         resultados.append((L, Lq, W, Wq, utilizacion))
         colas_raw.append((tiempos, colas))
         sistemas_raw.append((tiempos, sistemas))
         tiempos_cola_raw.append(t_cola)
         tiempos_sistema_raw.append(t_sistema)
+        llegadas_totales += clientes_atendidos + clientes_rechazados
+        rechazos_totales += clientes_rechazados
+    
+    p_denegacion = rechazos_totales / llegadas_totales if llegadas_totales > 0 else 0
 
     promedios = {
         'L': np.mean([r[0] for r in resultados]),
@@ -208,5 +227,5 @@ if __name__ == "__main__":
         'Wq': rho / (mu * (1 - rho))
     }
 
-    imprimir_resultados(promedios, teoricos)
+    imprimir_resultados(promedios, teoricos, probs, p_denegacion)
     graficar_resultados(colas_raw, sistemas_raw, tiempos_cola_raw, tiempos_sistema_raw)
