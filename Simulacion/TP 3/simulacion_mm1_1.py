@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
-import pandas as pd
+import sys
 
 class MM1Simulator:
     def __init__(self, arrival_rate, service_rate, simulation_time):
@@ -55,7 +55,7 @@ class MM1Simulator:
     def schedule_event(self, event_time, event_type, customer_id=None):
         """Programa un evento en la lista de eventos"""
         self.events.append((event_time, event_type, customer_id))
-        self.events.sort()  # Mantener eventos ordenados por tiempo
+        self.events.sort()
     
     def run_simulation(self):
         """Ejecuta la simulación completa"""
@@ -296,109 +296,225 @@ class MM1Simulator:
             
             error_util = abs(self.server_utilization - theoretical['server_utilization']) / theoretical['server_utilization'] * 100
             print(f"  Utilización del servidor: {error_util:.2f}%")
+
+def plot_consolidated_results(simulators, ciclos):
+    """Genera gráficos consolidados de todas las simulaciones"""
+    # Preparar colores para cada corrida
+    colors = plt.cm.tab10(np.linspace(0, 1, ciclos))
     
-    def plot_results(self):
-        """Genera gráficos de los resultados"""
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 10))
+    #fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
+    fig, ax1 = plt.subplots(1, 1, figsize=(16, 12))
+    
+    # Variables para calcular promedios
+    all_avg_customers_system = []
+    all_avg_customers_queue = []
+    all_avg_system_time = []
+    all_avg_wait_time = []
+    all_server_utilization = []
+    all_queue_distributions = {}
+    
+    # Gráfico 1: Evolución del sistema en el tiempo para todas las corridas
+    for i, simulator in enumerate(simulators):
+        alpha = 0.7 if ciclos <= 5 else 0.4  # Más transparente si hay muchas corridas
+        ax1.plot(simulator.time_points, simulator.queue_length_over_time, 
+                color=colors[i], linewidth=0.8, alpha=alpha, label=f'Cola Run {i+1}' if ciclos <= 5 else '')
+        ax1.plot(simulator.time_points, simulator.system_length_over_time, 
+                color=colors[i], linewidth=0.8, alpha=alpha, linestyle=':', 
+                label=f'Sistema Run {i+1}' if ciclos <= 5 else '')
         
-        # Gráfico 1: Longitud de cola en el tiempo
-        ax1.plot(self.time_points, self.queue_length_over_time, 'b-', linewidth=0.8, label='Cola')
-        ax1.plot(self.time_points, self.system_length_over_time, 'r-', linewidth=0.8, label='Sistema')
-        ax1.set_xlabel('Tiempo')
-        ax1.set_ylabel('Número de Clientes')
-        ax1.set_title('Evolución del Sistema en el Tiempo')
-        ax1.grid(True, alpha=0.3)
-        ax1.legend()
+        # Recolectar datos para promedios
+        all_avg_customers_system.append(simulator.avg_customers_system)
+        all_avg_customers_queue.append(simulator.avg_customers_queue)
+        all_avg_system_time.append(simulator.avg_system_time)
+        all_avg_wait_time.append(simulator.avg_wait_time)
+        all_server_utilization.append(simulator.server_utilization)
         
-        # Líneas horizontales con promedios
-        if self.queue_length_over_time:
-            ax1.axhline(y=self.avg_customers_queue, color='b', linestyle='--', alpha=0.7,
-                       label=f'Promedio cola: {self.avg_customers_queue:.2f}')
-            ax1.axhline(y=self.avg_customers_system, color='r', linestyle='--', alpha=0.7,
-                       label=f'Promedio sistema: {self.avg_customers_system:.2f}')
-            ax1.legend()
+        # Combinar distribuciones de cola
+        for n, count in simulator.queue_length_distribution.items():
+            if n in all_queue_distributions:
+                all_queue_distributions[n] += count
+            else:
+                all_queue_distributions[n] = count
+    
+    # Calcular promedios
+    prom_L = np.mean(all_avg_customers_system)
+    prom_Lq = np.mean(all_avg_customers_queue)
+    prom_W = np.mean(all_avg_system_time)
+    prom_Wq = np.mean(all_avg_wait_time)
+    prom_Util = np.mean(all_server_utilization)
+    
+    # Líneas punteadas con promedios
+    ax1.axhline(y=prom_Lq, color='blue', linestyle='--', linewidth=2,
+               label=f'Promedio Cola: {prom_Lq:.2f}')
+    ax1.axhline(y=prom_L, color='red', linestyle='--', linewidth=2,
+               label=f'Promedio Sistema: {prom_L:.2f}')
+    ax1.axhline(y=prom_W, color='green', linestyle='--', linewidth=2,
+               label=f'Promedio W: {prom_W:.2f}')
+    ax1.axhline(y=prom_Wq, color='yellow', linestyle='--', linewidth=2,
+               label=f'Promedio Wq: {prom_Wq:.2f}')
+    ax1.axhline(y=prom_Util, color='black', linestyle='--', linewidth=2,
+               label=f'Promedio Util: {prom_Util:.2f}')
+    
+    ax1.set_xlabel('Tiempo')
+    ax1.set_ylabel('Número de Clientes')
+    ax1.set_title(f'Evolución del Sistema - {ciclos} Corridas')
+    ax1.grid(True, alpha=0.3)
+    ax1.legend()
+    
+    '''# Gráfico 2: Distribución consolidada de longitudes de cola
+    if all_queue_distributions:
+        max_queue = max(all_queue_distributions.keys())
+        total_observations = sum(all_queue_distributions.values())
         
-        # Gráfico 2: Histograma de longitudes de cola
-        if self.queue_length_over_time:
-            max_queue = max(self.queue_length_over_time)
-            bins = range(max_queue + 2)
-            ax2.hist(self.queue_length_over_time, bins=bins, alpha=0.7, edgecolor='black', density=True)
-            ax2.set_xlabel('Longitud de Cola')
-            ax2.set_ylabel('Probabilidad')
-            ax2.set_title('Distribución de Longitudes de Cola')
-            ax2.grid(True, alpha=0.3)
-            
-            # Superponer distribución teórica
-            if self.utilization < 1:
-                rho = self.utilization
-                x_theoretical = range(min(max_queue + 1, 15))
-                y_theoretical = [(1 - rho) * (rho ** n) for n in x_theoretical]
-                ax2.plot(x_theoretical, y_theoretical, 'ro-', label='Teórica', markersize=4)
-                ax2.legend()
+        n_values = list(range(max_queue + 1))
+        probabilities = [all_queue_distributions.get(n, 0) / total_observations for n in n_values]
         
-        # Gráfico 3: Comparación de medidas simuladas vs teóricas
-        theoretical = self.get_theoretical_results()
-        if theoretical and self.utilization < 1:
-            categories = ['L (Clientes\nen sistema)', 'Lq (Clientes\nen cola)', 
-                         'W (Tiempo\nen sistema)', 'Wq (Tiempo\nen cola)', 'Utilización']
-            simulated = [self.avg_customers_system, self.avg_customers_queue, 
-                        self.avg_system_time, self.avg_wait_time, self.server_utilization]
-            theoretical_vals = [theoretical['avg_customers_system'], theoretical['avg_customers_queue'],
-                              theoretical['avg_time_system'], theoretical['avg_time_queue'], 
-                              theoretical['server_utilization']]
-            
-            x = np.arange(len(categories))
-            width = 0.35
-            
-            ax3.bar(x - width/2, simulated, width, label='Simulado', alpha=0.8)
-            ax3.bar(x + width/2, theoretical_vals, width, label='Teórico', alpha=0.8)
-            ax3.set_xlabel('Medidas de Rendimiento')
-            ax3.set_ylabel('Valores')
-            ax3.set_title('Comparación: Simulado vs Teórico')
-            ax3.set_xticks(x)
-            ax3.set_xticklabels(categories, rotation=45, ha='right')
-            ax3.legend()
-            ax3.grid(True, alpha=0.3)
+        ax2.bar(n_values, probabilities, alpha=0.7, edgecolor='black', 
+               label='Simulado (Consolidado)')
         
-        # Gráfico 4: Probabilidades de encontrar n clientes en cola
-        if self.queue_probabilities:
-            max_n = min(15, max(self.queue_probabilities.keys()))
-            n_values = list(range(max_n + 1))
-            sim_probs = [self.queue_probabilities.get(n, 0) for n in n_values]
-            
-            ax4.bar(n_values, sim_probs, alpha=0.7, label='Simulado')
-            
-            # Probabilidades teóricas
-            if self.utilization < 1:
-                rho = self.utilization
-                theo_probs = [(1 - rho) * (rho ** n) for n in n_values]
-                ax4.plot(n_values, theo_probs, 'ro-', label='Teórico', markersize=4)
-            
-            ax4.set_xlabel('Número de Clientes en Cola (n)')
-            ax4.set_ylabel('P(n clientes en cola)')
-            ax4.set_title('Distribución de Probabilidades')
-            ax4.legend()
-            ax4.grid(True, alpha=0.3)
+        # Distribución teórica
+        if simulators[0].utilization < 1:
+            rho = simulators[0].utilization
+            theo_probs = [(1 - rho) * (rho ** n) for n in n_values]
+            ax2.plot(n_values, theo_probs, 'ro-', label='Teórica', markersize=4)
         
-        plt.tight_layout()
-        plt.show()
+        ax2.set_xlabel('Longitud de Cola')
+        ax2.set_ylabel('Probabilidad')
+        ax2.set_title(f'Distribución de Longitudes de Cola - {ciclos} Corridas')
+        ax2.grid(True, alpha=0.3)
+        ax2.legend()
+    
+    # Gráfico 3: Comparación de medidas simuladas vs teóricas
+    theoretical = simulators[0].get_theoretical_results()
+    if theoretical and simulators[0].utilization < 1:
+        categories = ['L\n(Sistema)', 'Lq\n(Cola)', 'W\n(Sistema)', 'Wq\n(Cola)', 'Utilización']
+        simulated_avg = [prom_L, prom_Lq, prom_W, prom_Wq, prom_Util]
+        theoretical_vals = [theoretical['avg_customers_system'], theoretical['avg_customers_queue'],
+                          theoretical['avg_time_system'], theoretical['avg_time_queue'], 
+                          theoretical['server_utilization']]
+        
+        x = np.arange(len(categories))
+        width = 0.35
+        
+        ax3.bar(x - width/2, simulated_avg, width, label='Simulado (Promedio)', alpha=0.8)
+        ax3.bar(x + width/2, theoretical_vals, width, label='Teórico', alpha=0.8)
+        
+        # Agregar líneas de error mostrando la variabilidad
+        std_L = np.std(all_avg_customers_system)
+        std_Lq = np.std(all_avg_customers_queue)
+        std_W = np.std(all_avg_system_time)
+        std_Wq = np.std(all_avg_wait_time)
+        std_Util = np.std(all_server_utilization)
+        
+        errors = [std_L, std_Lq, std_W, std_Wq, std_Util]
+        ax3.errorbar(x - width/2, simulated_avg, yerr=errors, fmt='none', 
+                    color='black', capsize=3, label='Desv. Estándar')
+        
+        ax3.set_xlabel('Medidas de Rendimiento')
+        ax3.set_ylabel('Valores')
+        ax3.set_title(f'Comparación: Simulado vs Teórico - {ciclos} Corridas')
+        ax3.set_xticks(x)
+        ax3.set_xticklabels(categories)
+        ax3.legend()
+        ax3.grid(True, alpha=0.3)
+    
+    # Gráfico 4: Boxplots de las métricas
+    metricas_data = [all_avg_customers_system, all_avg_customers_queue, 
+                    all_avg_system_time, all_avg_wait_time, all_server_utilization]
+    metricas_names = ['L', 'Lq', 'W', 'Wq', 'Utilización']
+    
+    bp = ax4.boxplot(metricas_data, labels=metricas_names, patch_artist=True)
+    
+    # Colorear boxplots
+    colors_box = ['lightblue', 'lightgreen', 'lightcoral', 'lightyellow', 'lightpink']
+    for patch, color in zip(bp['boxes'], colors_box):
+        patch.set_facecolor(color)
+    
+    # Agregar líneas punteadas con valores teóricos
+    if theoretical:
+        theo_values = [theoretical['avg_customers_system'], theoretical['avg_customers_queue'],
+                      theoretical['avg_time_system'], theoretical['avg_time_queue'], 
+                      theoretical['server_utilization']]
+        for i, val in enumerate(theo_values):
+            ax4.axhline(y=val, xmin=(i)/len(theo_values), xmax=(i+1)/len(theo_values), 
+                       color='red', linestyle='--', linewidth=2)
+    
+    ax4.set_ylabel('Valores')
+    ax4.set_title(f'Distribución de Métricas - {ciclos} Corridas')
+    ax4.grid(True, alpha=0.3)'''
+    
+    plt.tight_layout()
+    plt.suptitle(f'Simulación M/M/1: λ={simulators[0].arrival_rate}, μ={simulators[0].service_rate}, '
+                f'ρ={simulators[0].utilization:.3f}, {ciclos} Corridas', 
+                fontsize=14, y=0.98)
+    plt.subplots_adjust(top=0.93)
+    plt.show()
 
 # Ejemplo de uso
 if __name__ == "__main__":
-    # Parámetros del sistema
-    lambda_rate = 2.0    # 2 llegadas por unidad de tiempo
-    mu_rate = 3.0        # 3 servicios por unidad de tiempo
-    sim_time = 100.0    # 1000 unidades de tiempo
-    
-    # Crear y ejecutar simulación
-    simulator = MM1Simulator(lambda_rate, mu_rate, sim_time)
-    simulator.run_simulation()
-    
-    # Mostrar resultados
-    simulator.print_results()
-    
-    # Generar gráficos
-    simulator.plot_results()
+    lambda_rate = 2.0
+    mu_rate = 3.0
+    sim_time = 100.0
+
+    if len(sys.argv) != 7 or sys.argv[1] != "-l" or sys.argv[3] != "-u" or sys.argv[5] != "-c":
+        print("Uso: python simulacion_mm1_1.py -l <lambda> -u <mu> -c <ciclos>")
+        sys.exit(1)
+    if float(sys.argv[2]) < 0 or int(sys.argv[6]) <= 0 or float(sys.argv[4]) < 0:
+        print("Error: python simulacion_mm1_1.py -l <lambda> -u <mu> -c <ciclos>")
+        sys.exit(1)
+
+    ciclosPrograma = int(sys.argv[6])
+    lambda_rate = float(sys.argv[2])
+    mu_rate = float(sys.argv[4])
+    sim_time = 100.0
+
+    # Crear simulaciones independientes (no copias del mismo objeto)
+    coleccionSimulaciones = [MM1Simulator(lambda_rate, mu_rate, sim_time) for _ in range(ciclosPrograma)]
+
+    # Ejecutar todas las simulaciones y recolectar resultados
+    resultados = {
+        "avg_customers_system": [],
+        "avg_customers_queue": [],
+        "avg_system_time": [],
+        "avg_wait_time": [],
+        "server_utilization": [],
+    }
+
+    for idx, simulator in enumerate(coleccionSimulaciones):
+        print(f"\n{'='*30} CORRIDA {idx+1} {'='*30}")
+        simulator.run_simulation()
+        simulator.print_results()
+
+        # Guardar resultados para promediar después
+        resultados["avg_customers_system"].append(simulator.avg_customers_system)
+        resultados["avg_customers_queue"].append(simulator.avg_customers_queue)
+        resultados["avg_system_time"].append(simulator.avg_system_time)
+        resultados["avg_wait_time"].append(simulator.avg_wait_time)
+        resultados["server_utilization"].append(simulator.server_utilization)
+
+    # Mostrar resumen de todas las corridas
+    print("\n" + "="*60)
+    print("RESUMEN DE TODAS LAS CORRIDAS")
+    print("="*60)
+    print(f"Cantidad de simulaciones: {ciclosPrograma}")
+    print(f"{'Corrida':>8} | {'L':>8} | {'Lq':>8} | {'W':>8} | {'Wq':>8} | {'Utiliz.':>8}")
+    print("-"*60)
+    for i in range(ciclosPrograma):
+        print(f"{i+1:>8} | {resultados['avg_customers_system'][i]:>8.4f} | {resultados['avg_customers_queue'][i]:>8.4f} | "
+              f"{resultados['avg_system_time'][i]:>8.4f} | {resultados['avg_wait_time'][i]:>8.4f} | {resultados['server_utilization'][i]:>8.4f}")
+
+    # Calcular y mostrar promedios
+    prom_L = np.mean(resultados["avg_customers_system"])
+    prom_Lq = np.mean(resultados["avg_customers_queue"])
+    prom_W = np.mean(resultados["avg_system_time"])
+    prom_Wq = np.mean(resultados["avg_wait_time"])
+    prom_Util = np.mean(resultados["server_utilization"])
+
+    print("-"*60)
+    print(f"{'PROMEDIO':>8} | {prom_L:>8.4f} | {prom_Lq:>8.4f} | {prom_W:>8.4f} | {prom_Wq:>8.4f} | {prom_Util:>8.4f}")
+
+    # MOSTRAR GRÁFICAS CONSOLIDADAS UNA SOLA VEZ
+    plot_consolidated_results(coleccionSimulaciones, ciclosPrograma)
     
     print(f"\n" + "="*60)
     print("Simulación completada exitosamente!")
