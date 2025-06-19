@@ -4,6 +4,7 @@ from collections import deque, defaultdict
 import sys
 import random
 import math
+import pandas as pd
 
 
 def generar_interarribo(lambd):
@@ -14,7 +15,7 @@ def generar_servicio(mu):
     u = random.random()
     return -1.0 / mu * np.log(1 - u)
 
-def simular_mm1(lambd, mu, tiempo_simulacion, tamaño_cola):
+def simular_mm1(lambd, mu, tiempo_simulacion, tamanio_cola):
     eventos = []
     tiempo_actual = 0
     servidor_ocupado = False
@@ -22,7 +23,6 @@ def simular_mm1(lambd, mu, tiempo_simulacion, tamaño_cola):
     id_cliente = 1
     clientes_rechazados = 0
 
-    # Estadísticas
     tiempo_eventos = []
     largo_cola = []
     largo_sistema = []
@@ -36,7 +36,6 @@ def simular_mm1(lambd, mu, tiempo_simulacion, tamaño_cola):
     distribucion_cola = defaultdict(int)
     tiempo_ultimo_evento = 0
 
-    # Programar primera llegada
     llegada = generar_interarribo(lambd)
     eventos.append((llegada, 'llegada', id_cliente))
 
@@ -68,7 +67,7 @@ def simular_mm1(lambd, mu, tiempo_simulacion, tamaño_cola):
                 tiempos_sistema.append(tiempo_servicio)
                 clientes_atendidos += 1
             else:
-                if len(cola) < tamaño_cola:
+                if len(cola) < tamanio_cola:
                     cola.append((id_evento, tiempo_actual))
                 else:
                     clientes_rechazados += 1
@@ -105,7 +104,7 @@ def simular_mm1(lambd, mu, tiempo_simulacion, tamaño_cola):
 
     return L, Lq, W, Wq, utilizacion, probabilidades, tiempo_eventos, largo_cola, largo_sistema, tiempos_cola, tiempos_sistema, clientes_atendidos, clientes_rechazados
 
-def imprimir_resultados(promedios, teoricos, probabilidades, prob_denegacion, tamaño_cola):
+def imprimir_resultados(promedios, teoricos, probabilidades, prob_denegacion, tamanio_cola, mu, ciclos, proporcion):
     print("\n--- Resultados Promedio Simulación M/M/1 ---")
     print(f"Promedio de clientes en sistema (L): {promedios['L']:.4f} | Teórico: {teoricos['L']:.4f}")
     print(f"Promedio de clientes en cola (Lq): {promedios['Lq']:.4f} | Teórico: {teoricos['Lq']:.4f}")
@@ -115,8 +114,37 @@ def imprimir_resultados(promedios, teoricos, probabilidades, prob_denegacion, ta
     print("\n--- Probabilidad de encontrar n clientes en cola ---")
     for n in sorted(probabilidades.keys()):
         print(f"P(n={n} en cola) ≈ {probabilidades[n]:.4f}")
-    print(f"\n--- Probabilidad de denegación de servicio (cola finita tamaño {tamaño_cola}) ---")
+    print(f"\n--- Probabilidad de denegación de servicio (cola finita tamaño {tamanio_cola}) ---")
     print(f"P(rechazo) ≈ {prob_denegacion:.4f}")
+
+    resumen = {
+        'Tamaño de cola': tamanio_cola,
+        'L': promedios['L'],
+        'L_teorico': teoricos['L'],
+        'Lq': promedios['Lq'],
+        'Lq_teorico': teoricos['Lq'],
+        'W': promedios['W'],
+        'W_teorico': teoricos['W'],
+        'Wq': promedios['Wq'],
+        'Wq_teorico': teoricos['Wq'],
+        'Utilización': promedios['rho'],
+        'P_rechazo': prob_denegacion
+    }
+
+    for n in range(10):
+        resumen[f'P(n={n})'] = probabilidades.get(n, 0.0)
+
+    df = pd.DataFrame([resumen])
+
+    try:
+        nombre_excel = f"resultados_mm1_mu{mu}_ciclos{ciclos}_coef{proporcion}_cola{tamanio_cola}.xlsx"
+        existing = pd.read_excel(nombre_excel)
+        df_final = pd.concat([existing, df], ignore_index=True)
+    except FileNotFoundError:
+        df_final = df
+
+    df_final.to_excel(nombre_excel, index=False)
+
 
 def graficar_resultados(colas_raw, sistemas_raw, tiempos_cola_raw, tiempos_sistema_raw):
     plt.figure(figsize=(14, 12))
@@ -150,7 +178,6 @@ def graficar_resultados(colas_raw, sistemas_raw, tiempos_cola_raw, tiempos_siste
     for t in tiempos_cola_raw:
         plt.hist(t, bins=30, alpha=0.3, color='skyblue')
     
-    #plt.hist(np.concatenate(tiempos_cola_raw), bins=30, color='black', alpha=0.7, label='Promedio')
     promedio_t_cola = [np.mean(t) for t in tiempos_cola_raw]
     plt.axvline(np.mean(promedio_t_cola), color='black', linestyle='--', linewidth=2, label='Promedio')
 
@@ -186,13 +213,12 @@ if __name__ == "__main__":
     proporcion = float(sys.argv[4])
     mu = float(sys.argv[2])
     ciclos = int(sys.argv[6])
-    #max_tamaño_cola = int(sys.argv[8])
-    tamaños_cola = [0, 2, 5, 10, 50]
+    tamanios_cola = [0, 2, 5, 10, 50]
 
     lambd = proporcion * mu
 
-    for tamaño_cola in tamaños_cola:
-        print(f"\n================== Tamaño de Cola: {tamaño_cola} ==================\n")
+    for tamanio_cola in tamanios_cola:
+        print(f"\n================== Tamaño de Cola: {tamanio_cola} ==================\n")
         rechazos_totales = 0
         llegadas_totales = 0
         resultados = []
@@ -203,7 +229,7 @@ if __name__ == "__main__":
 
         for _ in range(ciclos):
             tiempo_simulacion = 100
-            sim = simular_mm1(lambd, mu, tiempo_simulacion, tamaño_cola)
+            sim = simular_mm1(lambd, mu, tiempo_simulacion, tamanio_cola)
             L, Lq, W, Wq, utilizacion, probs, tiempos, colas, sistemas, t_cola, t_sistema, atendidos, rechazados = sim
 
             resultados.append((L, Lq, W, Wq, utilizacion))
@@ -214,7 +240,7 @@ if __name__ == "__main__":
             llegadas_totales += atendidos + rechazados
             rechazos_totales += rechazados
 
-        p_denegacion = rechazos_totales / llegadas_totales if llegadas_totales > 0 else 0
+        p_denegacion = rechazos_totales / llegadas_totales
 
         promedios = {
             'L': np.mean([r[0] for r in resultados]),
@@ -232,5 +258,5 @@ if __name__ == "__main__":
             'Wq': rho / (mu * (1 - rho))
         }
 
-        imprimir_resultados(promedios, teoricos, probs, p_denegacion, tamaño_cola)
+        imprimir_resultados(promedios, teoricos, probs, p_denegacion, tamanio_cola, mu, ciclos, proporcion)
         graficar_resultados(colas_raw, sistemas_raw, tiempos_cola_raw, tiempos_sistema_raw)
