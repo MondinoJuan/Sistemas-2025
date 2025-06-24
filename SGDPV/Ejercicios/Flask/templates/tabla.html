@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muestro</title>
+</head>
+<body>
+    <h1>Tabla de Usuarios</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Contraseña</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td>{{ record.user }}</td>
+                <td>{{ record.password }}</td>
+                <td>
+                    <a href="">Editar</a>
+                    <form method="POST" action="" style="display:inline;">
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('formulario') }}">Crear nuevo usuario</a>
+    
+</body>
+</html>
