@@ -9,7 +9,7 @@ classNames = { 0: 'background',
     17: 'sheep', 18: 'sofa', 19: 'train', 20: 'tvmonitor' }
 
 # Open video file or capture device. 
-cap = cv2.VideoCapture('videoplayback.mp4')
+cap = cv2.VideoCapture('autopista_video.mp4')
 
 #Load the Caffe model 
 net = cv2.dnn.readNetFromCaffe('MobileNetSSD_deploy.prototxt.txt', 'MobileNetSSD_deploy.caffemodel')
@@ -26,10 +26,8 @@ while True:
     rojo = (0, 0, 255)
     azul = (255, 0, 0)
     grosor = 6
-    posicionY_linea = int(altura/2)
-    cv2.rectangle(frame, (0, 0), (ancho, altura), verde, grosor)
+    posicionY_linea = int(altura/2) + 200
     cv2.line(frame, (0, posicionY_linea), (ancho, posicionY_linea), azul, grosor)           # El primer par es el punto de comienzo y el segundo par es el punto final
-    #cv2.circle(frame, (120, 120), (60), rojo, grosor)
 
     # Texto
     texto = "Video autopista"
@@ -41,29 +39,18 @@ while True:
     cv2.putText(frame, texto, posicion, fuente, escala_fuente, color_texto, grosor_texto)
     #-------------------------------------------------------------------------------------------------------------
 
-    # MobileNet requires fixed dimensions for input image(s)
-    # so we have to ensure that it is resized to 300x300 pixels.
-    # set a scale factor to image because network the objects has differents size. 
-    # We perform a mean subtraction (127.5, 127.5, 127.5) to normalize the input;
-    # after executing this command our "blob" now has the shape:
-    # (1, 3, 300, 300)
     blob = cv2.dnn.blobFromImage(frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False)
-    #Set to network the input blob 
     net.setInput(blob)
-    #Prediction of network
     detections = net.forward()
 
-    #Size of frame resize (300x300)
+    # Size of frame resize (300x300)
     cols = frame_resized.shape[1] 
     rows = frame_resized.shape[0]
 
-    #For get the class and location of object detected, 
-    # There is a fix index for class, location and confidence
-    # value in @detections array .
     for i in range(detections.shape[2]):
-        confidence = detections[0, 0, i, 2] #Confidence of prediction 
-        if confidence > 0.2: # Filter prediction 
-            class_id = int(detections[0, 0, i, 1]) # Class label
+        confidence = detections[0, 0, i, 2] 
+        if confidence > 0.2: 
+            class_id = int(detections[0, 0, i, 1])
 
             # Object location 
             xLeftBottom = int(detections[0, 0, i, 3] * cols) 
@@ -97,8 +84,8 @@ while True:
                 cv2.putText(frame, label, (xLeftBottom, yLeftBottom),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
 
-                print(label) #print class and confidence
+                print(label)
     
     cv2.imshow("frame", frame)
-    if cv2.waitKey(1) >= 0:  # Break with ESC 
+    if cv2.waitKey(1) >= 0:
         break
