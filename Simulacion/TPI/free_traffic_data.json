@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-08-13T11:10:09.364620",
+  "location": {
+    "lat": 48.8738,
+    "lng": 2.295
+  },
+  "sources": {
+    "synthetic": {
+      "source": "synthetic",
+      "congestion_factor": 1.334708536299062,
+      "hour_factor": 1.1,
+      "week_factor": 1.2,
+      "random_variation": 1.0111428305295924,
+      "estimated_speed": 37.46136226763198,
+      "timestamp": "2025-08-13T11:10:44.387217"
+    }
+  },
+  "summary": {
+    "avg_congestion_factor": 1.334708536299062,
+    "min_congestion_factor": 1.334708536299062,
+    "max_congestion_factor": 1.334708536299062,
+    "sources_with_congestion": 1,
+    "avg_speed": 37.46136226763198,
+    "sources_with_speed": 1
+  }
+}

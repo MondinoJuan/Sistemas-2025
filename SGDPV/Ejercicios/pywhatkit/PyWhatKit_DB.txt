@@ -1,0 +1,107 @@
+Date: 13/8/2025
+Time: 14:17
+Phone Number: +5493364218313
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:17
+Phone Number: +5493416956276
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:18
+Phone Number: +5493416722031
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:20
+Phone Number: +5493364218313
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:20
+Phone Number: +5493416956276
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:21
+Phone Number: +5493364218313
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:21
+Phone Number: +5493416956276
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:21
+Phone Number: +5493416722031
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:22
+Phone Number: +5493413719098
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:22
+Phone Number: +5493364402114
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:24
+Phone Number: +5493364218313
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:25
+Phone Number: +5493416956276
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:28
+Phone Number: +5493364218313
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:28
+Phone Number: +5493416956276
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:28
+Phone Number: +5493416722031
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:28
+Phone Number: +5493413719098
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:29
+Phone Number: +5493364402114
+Message: Hola, este es un mensaje de prueba enviado con PyWhatKit :)
+--------------------
+Date: 13/8/2025
+Time: 14:34
+Phone Number: +5493413719098
+Message: RIIIING RIIIIIIIIIIING, Sergio is Calling
+--------------------
+Date: 13/8/2025
+Time: 14:37
+Phone Number: +5493413719098
+Message: RIIIING RIIIIIIIIIIING, Sergio is Calling
+--------------------
+Date: 13/8/2025
+Time: 14:39
+Phone Number: +5493413719098
+Image: unnamed.png
+Caption: RIIIING RIIIIIIIIIIING, Sergio is Calling
+--------------------
+Date: 13/8/2025
+Time: 14:40
+Phone Number: +5493364402114
+Image: unnamed.png
+Caption: RIIIING RIIIIIIIIIIING, Sergio is Calling
+--------------------
