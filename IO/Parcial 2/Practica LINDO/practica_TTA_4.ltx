@@ -1,0 +1,23 @@
+MIN 52 MEH + 42 MEL + 42 MEK + 40 MEP
++ 63 MFH + 41 MFL + 34 MFK + 30 MFP
++ 47 BEH + 37 BEL + 37 BEK + 35 BEP
++ 65 BFH + 43 BFL + 36 BFK + 32 BFP
++ 53 XEH + 43 XEL + 43 XEK + 41 XEP
++ 60 XFH + 38 XFL + 31 XFK + 27 XFP
+
+ST
+! Demandas
+  MEH+BEH+XEH + MFH+BFH+XFH = 2
+  MEL+BEL+XEL + MFL+BFL+XFL = 4
+  MEK+BEK+XEK + MFK+BFK+XFK = 3
+  MEP+BEP+XEP + MFP+BFP+XFP = 3
+
+! Ofertas
+  MEH+MEL+MEK+MEP + MFH+MFL+MFK+MFP <= 3
+  BEH+BEL+BEK+BEP + BFH+BFL+BFK+BFP <= 6
+  XEH+XEL+XEK+XEP + XFH+XFL+XFK+XFP <= 5
+
+END
+
+! Variables enteras (cada una por línea)
+GIN 24
