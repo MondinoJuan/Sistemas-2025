@@ -1,0 +1,48 @@
+El viernes Pezzetti da consulta.
+
+RRHH:
+Se nos da un organigrama e la empresa, según el proyecto decir que sectores del organigrama están involucrados en el proyecto y sobre uno de esos sectores los perfiles de RRHH.
+Los puestos de TI seguramente ya los dimos.
+No se van a pedir mas de dos recursos humanos bien definidos.
+Perfil con tareas, responsabilidades, superior, nombre del puesto, las competencias (conocimientos de estudio, técnicos, si es graduado, idiomas) y competencias blandas (trabajo en equipo, proactivo, responsabilidad, manejo de emociones, flexibilidad, tener conciencia de la importancia del medioambiente).
+Lo blando es para todos los trabajos lo mismo (es como un a típica que va siempre).
+
+Para evaluar un RRHH hay que evaluar ciertas características/competencias (ej: para un líder las tareas de liderazgo).
+Si la evaluación la hacen muchas personas es una evaluación de desempeño 360 grados.
+Por lo general la evaluación la hace solo el superior.
+
+Higiene y Seguridad:
+Priorizar los puestos de sistemas.
+Tarea para monitorear los campos (ej: drones para ver si se necesita regar el campo), ese sector + el proyecto. Como es la higiene y seguridad?
+No siempre va a haber una persona sentada en la pc.
+Lo de los drones tiene pinta de ser posta así en el parcial (No decirle a Pezzetti que la profe nos dio un sneak peek).
+Pensar lo de sillas ergonómicas, distancia al monitor, el que vuela los drones. Buscar otras que tengan que ver con el campo.
+También entra las preventivas como estudios médicos para prevenir enfermedades en el trabajo
+
+
+ITIL:
+Cada servicio/gestión de ITIL tiene Kpis asociados.
+Buscar en la tabla que Kpis están asociados a cada gestión.
+En el PPT está todo genérico, por lo cual hay que adaptarlo a la organización.
+En el parcial van a preguntar por un incidente específico (otro sneak peek). Vamos a tener que decir si es incidente o evento.
+
+Pasos del proceso de gestión de incidentes (puede estar desordenado, seguir el orden del PPT):
+1- Identificación y registrar: se registra en un sistema de gestión de incidentes (ticket) . Se registra tipo de incidente, el usuario que lo realizó y la fecha.
+2- Categorización: 
+3- Priorización: es alta, media o baja. Los de prioridad baja los dejo en stop para resolver primero el de prioridad alta.
+4- Diagnóstico inicial:  para ver si se puede resolver sin escalarlo o hace falta escalarlo.
+5- Escalamiento: si lo tengo que derivar, derivarlo a quien corresponde.
+6- Investigación y diagnóstico detallado
+7- Resolución y restablecimiento del servicio
+8- Cierre del incidente: una vez resuelto debo informar al usuario que lo reportó para que lo pruebe. También se compara con incidentes que ya ocurrieron. Poner fecha fin de resolución del incidente.
+
+Pasos de proceso de gestión de eventos (chequear el orden también):
+1- Detección y filtrado de eventos: que eventos es más relevante, su periodicidad.
+2- Correlación y análisis de eventos 
+3- Notificación y registro de eventos: se registra el evento en un sistema de gestión
+4- Respuesta y cierre de eventos
+
+El dibujito muestra como se relaciona una gestión con otra. Siempre usar la palabra campo, agropecuario y otras relacionadas para indicar que estamos trabajando sobre la organización.
+
+Recomendaciones:
+Ya tener los perfiles de RRHH narrados, narrar todos.
