@@ -16,3 +16,6 @@ Algortimos_Geneticos
 #Ignoro PDFs
 TA/Libros Teoria/Internet de Las Cosas.pdf
 TA/Libros Teoria/Sistemas de Control para Ingenieria.pdf
+
+#Ignoro csv
+Simulacion/TPI/Archivos/recuento_de_carreteras.csv
