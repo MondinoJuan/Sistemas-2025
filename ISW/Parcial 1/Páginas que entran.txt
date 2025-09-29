@@ -1,0 +1,29 @@
+U1:
+PPT: De la página 1 a la 8.
+Libro: De 8 a 23.
+Libro común: 
+	Niveles de madurez de 52 a 57 y 63. 
+	Componentes de las áreas proceso de 31 a 42.
+
+U2:
+Libro común: 
+	Áreas de CMMI OPD de 293 a 303 (no subpracticas, ni IPPD).
+	Áreas de CMMI OPF de 315 a 328 (no subpracticas, ni IPPD).
+	Áreas de CMMI OT de 349 a 360 (no subpracticas, ni IPPD).
+PPT: De 1 a 46.
+
+U3:
+Libro común:
+	Áreas CMMI PP de 401 a 402.
+	Áreas CMMI PC de 387 a 388.
+PDF:
+	PP01: De 1 a 24.
+	PP03: De 19 a 25.
+
+U5:
+Libro común:
+	Áreas CMMI VAL de 565 a 567.
+	Áreas CMMI VER de 579 a 581.
+PPT: Myers.
+PDF:
+	VyV01: De 16 a 67.
