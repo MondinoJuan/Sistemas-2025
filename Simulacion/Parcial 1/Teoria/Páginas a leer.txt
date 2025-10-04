@@ -1,0 +1,9 @@
+Ross: 
+	Cap 2 hasta procesos de Poisson no homogéneos inclusive - pags 5 (16) a 30 (41)
+
+Weitz: 
+	Introducción a la simulación - Pag 31
+	Capítulo de colas
+	Capítulo de inventarios
+	Los 10 pasos de la simulación - Pags 39 a 42
+	Capítulo 13: Modelos de colas analítico - Pags 43 a 65
