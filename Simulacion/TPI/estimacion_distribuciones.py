@@ -6,15 +6,15 @@ from pathlib import Path
 # ===========================
 # PARÁMETROS A EDITAR
 # ===========================
-CSV_PATH = "Archivos/recuento_de_carreteras.csv"  # <- ruta a tu CSV enorme
+CSV_PATH = "Archivos/recuento_de_carreteras.csv"  # <- ruta a CSV enorme
 # Centro aproximado de la rotonda (Arco del Triunfo)
 CENTER_LAT = 48.8738
 CENTER_LON = 2.2950
-# Radio de captura de la rotonda (metros). 220–280 m suele funcionar bien.
+# Radio de captura de la rotonda (metros).
 RADIUS_M = 260
-# Tamaño de chunk (filas) para CSV grande
+# Tamaño de chunk (filas) para CSV
 CHUNKSIZE = 200_000
-# Nombre exacto de columnas (según tu ejemplo; ajustá si difiere)
+# Nombre exacto de columnas
 COLS = {
     "libelle": "Libelle",
     "datetime": "Date et heure de comptage",

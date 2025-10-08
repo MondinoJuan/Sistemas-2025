@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Estimación de distribuciones de entrada/salida para Place Charles de Gaulle
-Versión: fix2 (cruce por min/max, bbox opcional amplio, umbrales más permisivos, debug)
 """
 
 import math
@@ -16,7 +13,7 @@ import pandas as pd
 # ===========================
 # PARÁMETROS
 # ===========================
-CSV_PATH = "Archivos/recuento_de_carreteras.csv"  # <- ruta a tu CSV
+CSV_PATH = "Archivos/recuento_de_carreteras.csv"
 CENTER_LAT = 48.8738
 CENTER_LON = 2.2950
 
