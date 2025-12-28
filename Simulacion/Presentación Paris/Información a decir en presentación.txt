@@ -1,0 +1,48 @@
+Información a decir en presentación a París:
+
+Diapositiva 8:
+The information used to determinate the Flow of vehicles that get into the roundabout between hours of great traffic were collected by a site called open data Paris. In which we downloaded a csv document with the amount of vehicles across each road for each hour for many months. We provide ChatGPT with this document to estimate the average come-in Flow (the lambda in this Poisson behavior) of each of the 12 avenues.
+
+Due to the fact that it is difficult to mimic the human erratical behavior (vehicles going the wrong way o even perpendicular to the rest, random decition making, etc) in a software, in addition with the entry priority that this roundabout has, our model collapsed easily with values estimated by ChatGPT. So, we decided to reduce this values to 35%, this ends up allowing us to test if some scenarios (like adding traffic lights) are better than others.
+
+Once we test and realiced that with 30% of the real value the simulation behaved like the reality (sometimes collapses and sometimes dont), we changed the scenario to one of the proposed, if this newone allows us to increase the percentage of the reality without collapsing it means its a better option, a more stable one. Doing this we reached a 35% of the real values of come-in Flow. Now we will see this outcome represented with the nex calculations.
+
+------------------------------------------------------------------------------------------
+
+The traffic flow data used to estimate vehicle arrivals during peak hours was obtained from Open Data Paris. From there, we downloaded a CSV dataset containing hourly vehicle counts for each approach road over several months. We provide ChatGPT with this dataset to estimate the average arrival rate for each of the 12 avenues, modelling arrivals as a Poisson process, where the parameter λ represents the expected inflow per hour.
+
+In practice, however, it is difficult to fully reproduce the irregularities of real driver behaviour in a simulation—such as inconsistent decision-making, unexpected manoeuvres, or vehicles taking atypical paths—especially given the priority rules in this roundabout. As a result, when we used the arrival rates estimated from the real data, the model tended to collapse too easily.
+
+To make the scenarios comparable and keep the system within a realistic operating range, we introduced a scaling factor and reduced the inflows. We found that at around 30% of the original demand, the simulation behaved more like the real system—sometimes it remained stable, and sometimes it collapsed.
+
+We then applied the proposed control strategies and assessed whether they could sustain a higher proportion of the real demand without collapsing. Using this approach, the best-performing scenario allowed us to increase the inflow to 35% of the estimated real value while maintaining stability.
+
+In the next step, we will show how this improvement is reflected in the performance metrics and confidence-interval calculations.
+
+Diapositiva 14:
+Finally, we conclude that even though the base System is the fastest, the one that the agents spend less time in the roundabout, it is also the one that collapses the most easily, and is the one with the confidence Interval with the biggest range of time, less predictible.
+In addition, with the double syncronized System has the least probability of collapse, the most stable, but is the one that the agents spend the most time in it.
+On the other hand, with the double staggered System we reached common ground improving the time spent by agent in the model and a highly level of confidence on not collapsing. Also, this scenario has a confidence Interval with the less range of time, what makes it the most predictable.
+
+------------------------------------------------------------------------------------------
+
+Finally, we conclude that although the base system achieves the lowest average time in the roundabout, it is also the least robust: under certain demand conditions it is more likely to enter a critical congestion state from which it does not recover. In addition, it shows the widest confidence interval, which indicates greater variability and therefore lower predictability.
+
+By contrast, the double synchronised system is the most stable and has the lowest likelihood of collapse, but this stability comes at a cost: it produces the highest average time for vehicles in the system.
+
+The double staggered system provides the best compromise. It improves travel times compared with the synchronised option while still maintaining a high level of robustness. It also yields the narrowest confidence interval, meaning its performance is more consistent and more predictable across replications.
+
+RESULTS AND ANALYSIS:
+
+The calculations were made based on an aproximation to the Sample standard variation, a variable that measures the average dispersión of values in a dataset relative to its mean / average. We were to aproximate this variable thanks to the central limit theorem. In our case, we take 30 executions of the model as a big number because we made them one by one.
+
+Because the mean of the simulation outputs is approximately normally distributed by the Central Limit Theorem, we can construct a confidence interval for the true mean. Since the true standard deviation is unknown, we estimate it using the sample standard deviation S. The margin of error is therefore (formula) the more replications we run, the smaller d becomes and the more precise our estimate is.
+
+------------------------------------------------------------------------------------------
+
+Our calculations are based on the sample standard deviation, which measures how dispersed the simulation outputs are around their mean.
+We ran 30 independent replications of the model and treated this as a sufficiently large sample size to apply the Central Limit Theorem in practice.
+Under the CLT, the sample mean of the outputs is approximately normally distributed, which allows us to build a confidence interval for the true mean performance of the system.
+Because the true population standard deviation is unknown, we estimate it using the sample standard deviation S. The margin of error is then computed as:
+
+This expression shows that, as we increase the number of replications n, the margin of error d decreases, and our estimate becomes more precise.
