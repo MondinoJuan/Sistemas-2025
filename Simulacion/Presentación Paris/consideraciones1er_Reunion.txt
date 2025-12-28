@@ -1,0 +1,29 @@
+Tener video no mostrar el anylogic (hacer videos de cada escenario planteado)
+hacerlo mas sobrio, mas institucional
+proponer hacer paper internacional
+pedir alguna certificación o algo que deje plasmada la reunión
+avisar que vamos a estar nosotros y los profes como representantes de la UTN
+
+bajar el archivo de datos de entrada con curl
+
+Establecer el alcance (el marco del trabajo)
+intro
+como conseguimos los datos
+explicitar cual es la variable
+ir a los escenarios 
+los resultados (cuadro de doble entrada)
+
+dejar los cálculos por si preguntan
+
+Congreso JAIIO
+
+
+¿De donde sacamos los datos?
+¿Qué supuestos tomamos?
+¿Qué asumimos?
+¿Proporciones tomadas por las arterias?
+¿Qué comportamiento tienen los agentes? (autos y colectivos)
+
+Si algo no hicimos no pasa nada, se puede mejorar
+
+Fijarse si hay un streaming disponible.
