@@ -9,7 +9,7 @@ classNames = { 0: 'background',
     17: 'sheep', 18: 'sofa', 19: 'train', 20: 'tvmonitor' }
 
 # Open video file or capture device. 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('autopista_video1.mp4')
 
 #Load the Caffe model 
 net = cv2.dnn.readNetFromCaffe('MobileNetSSD_deploy.prototxt.txt', 'MobileNetSSD_deploy.caffemodel')
